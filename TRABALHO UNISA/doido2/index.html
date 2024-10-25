@@ -1,0 +1,139 @@
+<html>
+<head>
+    <title>Circle Calculator</title>
+    <script src="https://unpkg.com/react/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+</head>
+<body class="bg-gray-300">
+    <div id="root"></div>
+    <script type="text/babel">
+        function App() {
+            const [radius, setRadius] = React.useState('');
+            const [diameter, setDiameter] = React.useState('');
+            const [circumference, setCircumference] = React.useState('');
+            const [area, setArea] = React.useState('');
+            const [explanation, setExplanation] = React.useState('');
+
+            const calculateValues = () => {
+                let explanationText = '';
+                if (radius) {
+                    const r = parseFloat(radius);
+                    const d = Math.round(2 * r);
+                    const c = Math.round(2 * Math.PI * r);
+                    const a = Math.round(Math.PI * r * r);
+                    setDiameter(d);
+                    setCircumference(c);
+                    setArea(a);
+                    explanationText = `Para um raio de ${r}:
+                    - O diâmetro é calculado como 2 vezes o raio, resultando em ${d}.
+                    - A circunferência é calculada como 2 vezes pi vezes o raio, resultando em ${c}.
+                    - A área é calculada como pi vezes o raio ao quadrado, resultando em ${a}.`;
+                } else if (diameter) {
+                    const d = parseFloat(diameter);
+                    const r = Math.round(d / 2);
+                    const c = Math.round(Math.PI * d);
+                    const a = Math.round(Math.PI * r * r);
+                    setRadius(r);
+                    setCircumference(c);
+                    setArea(a);
+                    explanationText = `Para um diâmetro de ${d}:
+                    - O raio é calculado como o diâmetro dividido por 2, resultando em ${r}.
+                    - A circunferência é calculada como pi vezes o diâmetro, resultando em ${c}.
+                    - A área é calculada como pi vezes o raio ao quadrado, resultando em ${a}.`;
+                } else if (circumference) {
+                    const c = parseFloat(circumference);
+                    const r = Math.round(c / (2 * Math.PI));
+                    const d = Math.round(2 * r);
+                    const a = Math.round(Math.PI * r * r);
+                    setRadius(r);
+                    setDiameter(d);
+                    setArea(a);
+                    explanationText = `Para uma circunferência de ${c}:
+                    - O raio é calculado como a circunferência dividida por 2 vezes pi, resultando em ${r}.
+                    - O diâmetro é calculado como 2 vezes o raio, resultando em ${d}.
+                    - A área é calculada como pi vezes o raio ao quadrado, resultando em ${a}.`;
+                } else if (area) {
+                    const a = parseFloat(area);
+                    const r = Math.round(Math.sqrt(a / Math.PI));
+                    const d = Math.round(2 * r);
+                    const c = Math.round(2 * Math.PI * r);
+                    setRadius(r);
+                    setDiameter(d);
+                    setCircumference(c);
+                    explanationText = `Para uma área de ${a}:
+                    - O raio é calculado como a raiz quadrada da área dividida por pi, resultando em ${r}.
+                    - O diâmetro é calculado como 2 vezes o raio, resultando em ${d}.
+                    - A circunferência é calculada como 2 vezes pi vezes o raio, resultando em ${c}.`;
+                }
+                setExplanation(explanationText);
+            };
+
+            const clearValues = () => {
+                setRadius('');
+                setDiameter('');
+                setCircumference('');
+                setArea('');
+                setExplanation('');
+            };
+
+            return (
+                <div>
+                    <header className="bg-blue-900 p-4 flex justify-between items-center">
+                        <i className="fas fa-bars text-white text-2xl"></i>
+                        <div className="bg-blue-500 p-2 mx-auto">
+                            <img src="logo.svg" alt="Logo" className="w-12 h-12"/>
+                        </div>
+                    </header>
+                    <div className="flex p-4 space-x-4">
+                        <div className="bg-teal-600 w-1/3 h-96 p-4 text-white">
+                            {explanation && (
+                                <div className="bg-gray-700 p-4 rounded">
+                                    <p>{explanation}</p>
+                                </div>
+                            )}
+                        </div>
+                        <div className="bg-blue-800 w-2/3 p-6 text-white">
+                            <div className="flex">
+                                <div className="bg-black w-24 h-24 flex items-center justify-center">
+                                    <div className="w-20 h-20 border-4 border-red-500 rounded-full"></div>
+                                </div>
+                                <p className="ml-4">
+                                    Esta calculadora computa os valores de um círculo (raio, diâmetro, circunferência ou área) quando um valor é informado<br/>
+                                    Insira em um dos campos e os outros serão calculados automaticamente.
+                                </p>
+                            </div>
+                            <form className="mt-4" onSubmit={(e) => e.preventDefault()}>
+                                <div className="mb-2">
+                                    <label className="block">Raio r:</label>
+                                    <input type="text" className="w-full p-1 text-black" value={radius} onChange={(e) => setRadius(e.target.value)}/>
+                                </div>
+                                <div className="mb-2">
+                                    <label className="block">Diâmetro d r:</label>
+                                    <input type="text" className="w-full p-1 text-black" value={diameter} onChange={(e) => setDiameter(e.target.value)}/>
+                                </div>
+                                <div className="mb-2">
+                                    <label className="block">Perímetro U:</label>
+                                    <input type="text" className="w-full p-1 text-black" value={circumference} onChange={(e) => setCircumference(e.target.value)}/>
+                                </div>
+                                <div className="mb-2">
+                                    <label className="block">Área A:</label>
+                                    <input type="text" className="w-full p-1 text-black" value={area} onChange={(e) => setArea(e.target.value)}/>
+                                </div>
+                                <div className="flex space-x-2">
+                                    <button type="button" className="bg-white text-black px-4 py-2" onClick={calculateValues}>Calcular</button>
+                                    <button type="button" className="bg-white text-black px-4 py-2" onClick={clearValues}>Limpar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
